@@ -544,6 +544,20 @@ public static class BloodcraftAPI
         return true;
     }
 
+    public static bool RemoveFamiliarFromBox(ulong steamId, string boxName, int familiarPrefabHash)
+    {
+        var data = LoadFamiliarUnlocksData(steamId);
+
+        if (!data.FamiliarUnlocks.TryGetValue(boxName, out var familiarSet))
+            return false;
+
+        if (!familiarSet.Remove(familiarPrefabHash))
+            return false;
+
+        SaveFamiliarUnlocksData(steamId, data);
+        return true;
+    }
+
     public static bool AddFamiliarToBox(ulong steamId, int familiarPrefabHash, string boxName)
     {
         var data = LoadFamiliarUnlocksData(steamId);
@@ -569,7 +583,6 @@ public static class BloodcraftAPI
         var unlocksData = LoadFamiliarUnlocksData(steamId);
         var experienceData = LoadFamiliarExperienceData(steamId);
         var prestigeData = LoadFamiliarPrestigeData(steamId);
-        var tierData = LoadFamiliarTierData(steamId);
 
         var result = new List<FamiliarData>();
 
@@ -587,7 +600,6 @@ public static class BloodcraftAPI
             }
 
             int prestige = prestigeData.FamiliarPrestige.TryGetValue(prefabHash, out int p) ? p : 0;
-            int tier = tierData.FamiliarTier.TryGetValue(prefabHash, out int t) ? t : 0;
 
             result.Add(
                 new FamiliarData
@@ -597,7 +609,6 @@ public static class BloodcraftAPI
                     Level = level,
                     Xp = xp,
                     Prestige = prestige,
-                    Tier = tier,
                 }
             );
         }
@@ -631,7 +642,6 @@ public static class BloodcraftAPI
         var unlocksData = LoadFamiliarUnlocksData(steamId);
         var experienceData = LoadFamiliarExperienceData(steamId);
         var prestigeData = LoadFamiliarPrestigeData(steamId);
-        var tierData = LoadFamiliarTierData(steamId);
 
         var result = new Dictionary<string, List<FamiliarData>>();
 
@@ -659,8 +669,6 @@ public static class BloodcraftAPI
                         ? p
                         : 0;
 
-                    int tier = tierData.FamiliarTier.TryGetValue(prefabHash, out int t) ? t : 0;
-
                     matches.Add(
                         new FamiliarData
                         {
@@ -669,7 +677,6 @@ public static class BloodcraftAPI
                             Level = level,
                             Xp = xp,
                             Prestige = prestige,
-                            Tier = tier,
                         }
                     );
                 }
