@@ -25,7 +25,14 @@ using WeaponType = Bloodcraft.Interfaces.WeaponType;
 namespace Bloodcraft;
 internal static class Core
 {
-    public static World Server { get; } = GetServerWorld() ?? throw new Exception("There is no Server world!");
+    static World _server;
+    public static World Server
+    {
+        get
+        {
+            return _server ??= GetServerWorld() ?? throw new Exception("There is no Server world!");
+        }
+    }
     public static EntityManager EntityManager => Server.EntityManager;
     public static ServerGameManager ServerGameManager => SystemService.ServerScriptMapper.GetServerGameManager();
     public static SystemService SystemService { get; } = new(Server);
@@ -157,8 +164,13 @@ internal static class Core
     }
     static World GetServerWorld()
     {
-        return World.s_AllWorlds.ToArray().FirstOrDefault(world => world.Name == "Server");
+
+        World[] worlds = World.s_AllWorlds.ToArray();
+
+        Log.LogInfo("Listing all worlds: " + worlds); 
+        return worlds.FirstOrDefault(world => world.Name == "Server");
     }
+
     static MonoBehaviour GetOrCreateMonoBehaviour()
     {
         return _monoBehaviour ??= CreateMonoBehaviour();

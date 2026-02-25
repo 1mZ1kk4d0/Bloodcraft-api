@@ -12,6 +12,9 @@ using Unity.Mathematics;
 using Unity.Transforms;
 using UnityEngine;
 using VampireCommandFramework;
+
+
+
 using static Bloodcraft.Services.BattleService;
 using static Bloodcraft.Services.DataService.FamiliarPersistence;
 using static Bloodcraft.Services.DataService.FamiliarPersistence.FamiliarBattleGroupsManager;
@@ -30,7 +33,7 @@ using static Bloodcraft.Utilities.Progression;
 
 namespace Bloodcraft.Commands;
 
-[CommandGroup(name: "familiar", "fam")]
+[CommandGroup(name: "familiar", "pet")]
 internal static class FamiliarCommands
 {
     static EntityManager EntityManager => Core.EntityManager;

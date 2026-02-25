@@ -6,7 +6,7 @@ internal static class Jewels
 {
     static readonly Dictionary<PrefabGUID, IReadOnlyList<PrefabGUID>> _spellModSets = new()
     {
-        // ─────────────────────────────────────── Blood
+
         [PrefabGUIDs.AB_Blood_BloodFountain_AbilityGroup] =
         [
             PrefabGUIDs.SpellMod_BloodFountain_FirstImpactApplyLeech,

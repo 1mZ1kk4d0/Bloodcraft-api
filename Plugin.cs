@@ -11,6 +11,7 @@ using static Bloodcraft.Services.DataService.PlayerDataInitialization;
 namespace Bloodcraft;
 
 [BepInPlugin(MyPluginInfo.PLUGIN_GUID, MyPluginInfo.PLUGIN_NAME, MyPluginInfo.PLUGIN_VERSION)]
+[BepInDependency("gg.deca.VampireCommandFramework")]
 internal class Plugin : BasePlugin
 {
     Harmony _harmony;
@@ -28,14 +29,13 @@ internal class Plugin : BasePlugin
             return;
         }
 
-        // Console.OutputEncoding = System.Text.Encoding.UTF8;
         _harmony = Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly());
 
         InitializeConfig();
         LoadPlayerData();
         CommandRegistry.RegisterAll();
 
-        Core.Log.LogInfo($"{MyPluginInfo.PLUGIN_NAME}[{MyPluginInfo.PLUGIN_VERSION}] loaded!");
+        Core.Log.LogInfo($"{MyPluginInfo.PLUGIN_NAME}[{MyPluginInfo.PLUGIN_VERSION}] Loaded!");
     }
     public override bool Unload()
     {
