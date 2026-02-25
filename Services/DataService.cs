@@ -1154,6 +1154,58 @@ internal static class DataService
                 return JsonSerializer.Deserialize<FamiliarPrestigeData>(jsonString);
             }
         }
+        public static class FamiliarSoulsManager
+        {
+            [Serializable]
+            public class FamiliarSoulsData
+            {
+                public Dictionary<int, int> FamiliarSouls { get; set; } = [];
+            }
+            static string GetFilePath(ulong steamId) => Path.Combine(DirectoryPaths[7], $"{steamId}_familiar_souls.json");
+            public static void SaveFamiliarSoulsData(ulong steamId, FamiliarSoulsData data)
+            {
+                string filePath = GetFilePath(steamId);
+                string jsonString = JsonSerializer.Serialize(data, _jsonOptions);
+
+                File.WriteAllText(filePath, jsonString);
+            }
+            public static FamiliarSoulsData LoadFamiliarSoulsData(ulong steamId)
+            {
+                string filePath = GetFilePath(steamId);
+
+                if (!File.Exists(filePath))
+                    return new FamiliarSoulsData();
+
+                string jsonString = File.ReadAllText(filePath);
+                return JsonSerializer.Deserialize<FamiliarSoulsData>(jsonString);
+            }
+        }
+        public static class FamiliarTierManager
+        {
+            [Serializable]
+            public class FamiliarTierData
+            {
+                public Dictionary<int, int> FamiliarTier { get; set; } = [];
+            }
+            static string GetFilePath(ulong steamId) => Path.Combine(DirectoryPaths[7], $"{steamId}_familiar_tiers.json");
+            public static void SaveFamiliarTierData(ulong steamId, FamiliarTierData data)
+            {
+                string filePath = GetFilePath(steamId);
+                string jsonString = JsonSerializer.Serialize(data, _jsonOptions);
+
+                File.WriteAllText(filePath, jsonString);
+            }
+            public static FamiliarTierData LoadFamiliarTierData(ulong steamId)
+            {
+                string filePath = GetFilePath(steamId);
+
+                if (!File.Exists(filePath))
+                    return new FamiliarTierData();
+
+                string jsonString = File.ReadAllText(filePath);
+                return JsonSerializer.Deserialize<FamiliarTierData>(jsonString);
+            }
+        }
         public static class FamiliarBuffsManager
         {
             [Serializable]

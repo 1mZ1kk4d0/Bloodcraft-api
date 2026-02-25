@@ -18,6 +18,8 @@ using static Bloodcraft.Services.DataService.FamiliarPersistence.FamiliarBattleG
 using static Bloodcraft.Services.DataService.FamiliarPersistence.FamiliarBuffsManager;
 using static Bloodcraft.Services.DataService.FamiliarPersistence.FamiliarExperienceManager;
 using static Bloodcraft.Services.DataService.FamiliarPersistence.FamiliarPrestigeManager;
+using static Bloodcraft.Services.DataService.FamiliarPersistence.FamiliarSoulsManager;
+using static Bloodcraft.Services.DataService.FamiliarPersistence.FamiliarTierManager;
 using static Bloodcraft.Services.DataService.FamiliarPersistence.FamiliarUnlocksManager;
 using static Bloodcraft.Services.PlayerService;
 using static Bloodcraft.Systems.Familiars.FamiliarBindingSystem;
@@ -761,7 +763,19 @@ internal static class FamiliarCommands
                 prestigeLevel = prestigeData.FamiliarPrestige[familiarId];
             }
 
-            LocalizationService.HandleReply(ctx, $"Your familiar is level [<color=white>{xpData.Key}</color>][<color=#90EE90>{prestigeLevel}</color>] and has <color=yellow>{progress}</color> <color=#FFC0CB>experience</color> (<color=white>{percent}%</color>)!");
+            int tierLevel = 0;
+
+            if (ConfigService.FamiliarSouls)
+            {
+                var tierData = FamiliarTierManager.LoadFamiliarTierData(steamId);
+
+                if (tierData.FamiliarTier.TryGetValue(familiarId, out var tier))
+                {
+                    tierLevel = tier;
+                }
+            }
+
+            LocalizationService.HandleReply(ctx, $"Your familiar is level [<color=white>{xpData.Key}</color>][<color=#90EE90>{prestigeLevel}</color>][<color=#FFD700>T{tierLevel}</color>] and has <color=yellow>{progress}</color> <color=#FFC0CB>experience</color> (<color=white>{percent}%</color>)!");
 
             if (familiar.Exists())
             {
@@ -1054,6 +1068,104 @@ internal static class FamiliarCommands
         else
         {
             LocalizationService.HandleReply(ctx, "Couldn't find active familiar for prestiging!");
+        }
+    }
+
+    [Command(name: "upgrade", shortHand: "up", adminOnly: false, usage: ".fam up", description: "Upgrades active familiar tier using a collected soul.")]
+    public static void UpgradeFamiliarCommand(ChatCommandContext ctx)
+    {
+        if (!ConfigService.FamiliarSystem)
+        {
+            LocalizationService.HandleReply(ctx, "Familiars are not enabled.");
+            return;
+        }
+
+        if (!ConfigService.FamiliarSouls)
+        {
+            LocalizationService.HandleReply(ctx, "Familiar souls are not enabled.");
+            return;
+        }
+
+        ulong steamId = ctx.Event.User.PlatformId;
+
+        if (steamId.HasActiveFamiliar())
+        {
+            ActiveFamiliarData activeFamiliar = GetActiveFamiliarData(steamId);
+            int familiarId = activeFamiliar.FamiliarId;
+
+            FamiliarTierData tierData = LoadFamiliarTierData(steamId);
+
+            if (!tierData.FamiliarTier.ContainsKey(familiarId))
+            {
+                tierData.FamiliarTier[familiarId] = 0;
+            }
+
+            int currentTier = tierData.FamiliarTier[familiarId];
+
+            if (currentTier >= ConfigService.MaxFamiliarTier)
+            {
+                LocalizationService.HandleReply(ctx, $"Familiar is already at maximum tier (<color=#FFD700>T{currentTier}</color>)!");
+                return;
+            }
+
+            FamiliarSoulsData soulsData = LoadFamiliarSoulsData(steamId);
+            int availableSouls = soulsData.FamiliarSouls.TryGetValue(familiarId, out var souls) ? souls : 0;
+
+            if (availableSouls < 1)
+            {
+                LocalizationService.HandleReply(ctx, "You need at least <color=white>1</color> soul to upgrade your familiar!");
+                return;
+            }
+
+            soulsData.FamiliarSouls[familiarId] = availableSouls - 1;
+            SaveFamiliarSoulsData(steamId, soulsData);
+
+            tierData.FamiliarTier[familiarId] = currentTier + 1;
+            SaveFamiliarTierData(steamId, tierData);
+
+            LocalizationService.HandleReply(ctx, $"Familiar upgraded to <color=#FFD700>T{currentTier + 1}</color>! (<color=white>{availableSouls - 1}</color> souls remaining)");
+        }
+        else
+        {
+            LocalizationService.HandleReply(ctx, "Couldn't find active familiar for upgrading!");
+        }
+    }
+
+    [Command(name: "souls", shortHand: "so", adminOnly: false, usage: ".fam so", description: "Display soul count and tier for active familiar.")]
+    public static void GetFamiliarSoulsCommand(ChatCommandContext ctx)
+    {
+        if (!ConfigService.FamiliarSystem)
+        {
+            LocalizationService.HandleReply(ctx, "Familiars are not enabled.");
+            return;
+        }
+
+        if (!ConfigService.FamiliarSouls)
+        {
+            LocalizationService.HandleReply(ctx, "Familiar souls are not enabled.");
+            return;
+        }
+
+        ulong steamId = ctx.Event.User.PlatformId;
+
+        if (steamId.HasActiveFamiliar())
+        {
+            ActiveFamiliarData activeFamiliar = GetActiveFamiliarData(steamId);
+            int familiarId = activeFamiliar.FamiliarId;
+
+            FamiliarSoulsData soulsData = LoadFamiliarSoulsData(steamId);
+            FamiliarTierData tierData = LoadFamiliarTierData(steamId);
+
+            int souls = soulsData.FamiliarSouls.TryGetValue(familiarId, out var s) ? s : 0;
+            int tier = tierData.FamiliarTier.TryGetValue(familiarId, out var t) ? t : 0;
+
+            string familiarName = new Stunlock.Core.PrefabGUID(familiarId).GetLocalizedName();
+
+            LocalizationService.HandleReply(ctx, $"<color=green>{familiarName}</color> | Tier: <color=#FFD700>T{tier}</color>/<color=white>T{ConfigService.MaxFamiliarTier}</color> | Souls: <color=white>{souls}</color>");
+        }
+        else
+        {
+            LocalizationService.HandleReply(ctx, "Couldn't find active familiar!");
         }
     }
 

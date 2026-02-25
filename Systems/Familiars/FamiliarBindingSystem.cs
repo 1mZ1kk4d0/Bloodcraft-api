@@ -17,6 +17,7 @@ using static Bloodcraft.Services.DataService.FamiliarPersistence;
 using static Bloodcraft.Services.DataService.FamiliarPersistence.FamiliarBuffsManager;
 using static Bloodcraft.Services.DataService.FamiliarPersistence.FamiliarEquipmentManager;
 using static Bloodcraft.Services.DataService.FamiliarPersistence.FamiliarExperienceManager;
+using static Bloodcraft.Services.DataService.FamiliarPersistence.FamiliarTierManager;
 using static Bloodcraft.Utilities.Misc.PlayerBoolsManager;
 using static Bloodcraft.Utilities.Progression;
 
@@ -66,6 +67,9 @@ internal static class FamiliarBindingSystem
 
     static readonly int _maxFamiliarLevel = ConfigService.MaxFamiliarLevel;
     static readonly float _familiarPrestigeStatMultiplier = ConfigService.FamiliarPrestigeStatMultiplier;
+
+    static readonly bool _familiarSouls = ConfigService.FamiliarSouls;
+    static readonly float _familiarTierStatMultiplier = ConfigService.FamiliarTierStatMultiplier;
 
     public static Entity _unitTeamSingleton = Entity.Null;
 
@@ -489,6 +493,15 @@ internal static class FamiliarBindingSystem
         powerFactor += prestigeLevel * POWER_SKEW;
         float prestigeFactor = 1 + (prestigeLevel * _familiarPrestigeStatMultiplier);
 
+        int tierLevel = 0;
+
+        if (_familiarSouls && LoadFamiliarTierData(steamId).FamiliarTier.TryGetValue(famKey, out var tierData))
+        {
+            tierLevel = tierData;
+        }
+
+        float tierFactor = 1 + (tierLevel * _familiarTierStatMultiplier);
+
         // so from gear ~750 health, 30-40 physical power, 30-40 spell power
         // traits should be % added bonus on top of whatever their normal scaled stats are? still need to think about equipment but yeah that should mostly work
         // for the love of god don't touch anything related to saving/persistence without then immediately testing to see if it does anything bad ;_;
@@ -505,8 +518,15 @@ internal static class FamiliarBindingSystem
         AiMoveSpeeds aiMoveSpeeds = original.Read<AiMoveSpeeds>();
         AiMoveSpeeds familiarAiMoveSpeeds = familiar.Read<AiMoveSpeeds>();
 
-        familiarUnitStats.PhysicalPower._Value = unitStats.PhysicalPower._Value * powerFactor; // scaling these with prestige not a great idea in retrospect, nerfed that a bit but they also start at higher base power per prestige then probably rebalancing when equipment stats come into play
-        familiarUnitStats.SpellPower._Value = unitStats.SpellPower._Value * powerFactor;
+        familiarUnitStats.PhysicalPower._Value = unitStats.PhysicalPower._Value * powerFactor * tierFactor; // scaling these with prestige not a great idea in retrospect, nerfed that a bit but they also start at higher base power per prestige then probably rebalancing when equipment stats come into play
+        familiarUnitStats.SpellPower._Value = unitStats.SpellPower._Value * powerFactor * tierFactor;
+
+        if (tierLevel > 0)
+        {
+            familiarUnitStats.PhysicalResistance._Value = unitStats.PhysicalResistance._Value * tierFactor;
+            familiarUnitStats.SpellResistance._Value = unitStats.SpellResistance._Value * tierFactor;
+            familiarUnitStats.HealingReceived._Value = unitStats.HealingReceived._Value * tierFactor;
+        }
 
         /*
         foreach (FamiliarStatType prestigeStat in familiarPrestigeStats)
@@ -565,6 +585,8 @@ internal static class FamiliarBindingSystem
         {
             maxHealth *= healthFactor;
         }
+
+        maxHealth *= tierFactor;
 
         familiar.With((ref Health health) =>
         {

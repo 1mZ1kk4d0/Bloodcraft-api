@@ -353,6 +353,18 @@ internal static class ConfigService
     static readonly Lazy<int> _maxFamiliarLevel = new(() => GetConfigValue<int>("MaxFamiliarLevel"));
     public static int MaxFamiliarLevel => _maxFamiliarLevel.Value;
 
+    static readonly Lazy<bool> _familiarSouls = new(() => GetConfigValue<bool>("FamiliarSouls"));
+    public static bool FamiliarSouls => _familiarSouls.Value;
+
+    static readonly Lazy<float> _soulDropChance = new(() => GetConfigValue<float>("SoulDropChance"));
+    public static float SoulDropChance => _soulDropChance.Value;
+
+    static readonly Lazy<int> _maxFamiliarTier = new(() => GetConfigValue<int>("MaxFamiliarTier"));
+    public static int MaxFamiliarTier => _maxFamiliarTier.Value;
+
+    static readonly Lazy<float> _familiarTierStatMultiplier = new(() => GetConfigValue<float>("FamiliarTierStatMultiplier"));
+    public static float FamiliarTierStatMultiplier => _familiarTierStatMultiplier.Value;
+
     static readonly Lazy<bool> _allowVBloods = new(() => GetConfigValue<bool>("AllowVBloods"));
     public static bool AllowVBloods => _allowVBloods.Value;
 
@@ -639,6 +651,10 @@ internal static class ConfigService
             new ConfigEntryDefinition("Familiars", "MaxFamiliarPrestiges", 10, "The maximum number of prestiges a familiar can reach."),
             new ConfigEntryDefinition("Familiars", "FamiliarPrestigeStatMultiplier", 0.10f, "The multiplier for applicable stats gained per familiar prestige."),
             new ConfigEntryDefinition("Familiars", "MaxFamiliarLevel", 90, "The maximum level a familiar can reach."),
+            new ConfigEntryDefinition("Familiars", "FamiliarSouls", true, "Enable or disable the soul system for familiars. When enabled, killing a unit of the same type as your active familiar has a chance to drop a soul, which can be used to upgrade the familiar's tier."),
+            new ConfigEntryDefinition("Familiars", "SoulDropChance", 0.05f, "The chance for a soul to drop when killing a unit of the same type as your active familiar."),
+            new ConfigEntryDefinition("Familiars", "MaxFamiliarTier", 5, "The maximum tier a familiar can reach (t0 to tN)."),
+            new ConfigEntryDefinition("Familiars", "FamiliarTierStatMultiplier", 0.20f, "The multiplier for all stats gained per familiar tier (0.20 = 20% per tier)."),
             new ConfigEntryDefinition("Familiars", "AllowVBloods", false, "Allow VBloods to be unlocked as familiars (this includes shardbearers, if you want those excluded use the bannedUnits list)."),
             new ConfigEntryDefinition("Familiars", "AllowMinions", false, "Allow Minions to be unlocked as familiars (leaving these excluded by default since some have undesirable behaviour and I am not sifting through them all to correct that, enable at own risk)."),
             new ConfigEntryDefinition("Familiars", "BannedUnits", "", "The PrefabGUID hashes for units that cannot be used as familiars. Same structure as the buff lists except unit prefabs."),

@@ -280,6 +280,12 @@ Jairon O.; Odjit; Jera; Kokuren TCG and Gaming Shop; Rexxn; Eduardo G.; DirtyMik
 - `.familiar movebox [BoxName]`
   - Moves active familiar to specified box.
   - Shortcut: *.fam mb [BoxName]*
+- `.familiar overflow`
+  - Lists familiars stored in overflow.
+  - Shortcut: *.fam of*
+- `.familiar overflowmove [#] [BoxName]`
+  - Moves familiar from overflow to specified box.
+  - Shortcut: *.fam om [#] [BoxName]*
 - `.familiar prestige`
   - Prestiges familiar if conditions are met, raising base stats by configured multiplier.
   - Shortcut: *.fam pr*
@@ -310,6 +316,9 @@ Jairon O.; Odjit; Jera; Kokuren TCG and Gaming Shop; Rexxn; Eduardo G.; DirtyMik
 - `.familiar smartbind [Name]`
   - Searches and binds a familiar. If multiple matches are found, returns a list for clarification.
   - Shortcut: *.fam sb [Name]*
+- `.familiar souls`
+  - Display soul count and tier for active familiar.
+  - Shortcut: *.fam so*
 - `.familiar toggle`
   - Calls or dismisses familar.
   - Shortcut: *.fam t*
@@ -322,6 +331,9 @@ Jairon O.; Odjit; Jera; Kokuren TCG and Gaming Shop; Rexxn; Eduardo G.; DirtyMik
 - `.familiar unbind`
   - Destroys active familiar.
   - Shortcut: *.fam ub*
+- `.familiar upgrade`
+  - Upgrades active familiar tier using a collected soul.
+  - Shortcut: *.fam up*
 
 ### Level Commands
 - `.level get`
@@ -458,10 +470,6 @@ Jairon O.; Odjit; Jera; Kokuren TCG and Gaming Shop; Rexxn; Eduardo G.; DirtyMik
   - Manually sets spells for testing (if you enter a radius it will apply to players around the entered name).
   - Shortcut: *.wep spell [Name] [Slot] [PrefabGuid] [Radius]*
 
-</details>
-
-<details>
-<summary><strong>Configuration</strong></summary>
 
 ## Configuration
 
@@ -504,7 +512,7 @@ Jairon O.; Odjit; Jera; Kokuren TCG and Gaming Shop; Rexxn; Eduardo G.; DirtyMik
   Enable or disable quests (kill, gather, and crafting).
 - **Infinite Dailies**: `InfiniteDailies` (bool, default: False)
   Enable or disable infinite dailies.
-- **Daily Perfect Chance**: `DailyPerfectChance` (float, default: 0.1)
+- **Daily Perfect Chance**: `DailyPerfectChance` (float, default: 0,1)
   Chance to receive a random perfect gem (can be used to control spell school for primal jewels in gemcutter) when completing daily quests.
 - **Quest Rewards**: `QuestRewards` (string, default: "28358550,576389135,-257494203")
   Item prefabs for quest reward pool.
@@ -524,7 +532,7 @@ Jairon O.; Odjit; Jera; Kokuren TCG and Gaming Shop; Rexxn; Eduardo G.; DirtyMik
   Enable or disable the leveling system.
 - **Rested XP System**: `RestedXPSystem` (bool, default: False)
   Enable or disable rested experience for players logging out inside of coffins (half for wooden, full for stone). Prestiging level will reset accumulated rested xp.
-- **Rested XP Rate**: `RestedXPRate` (float, default: 0.05)
+- **Rested XP Rate**: `RestedXPRate` (float, default: 0,05)
   Rate of Rested XP accumulation per tick (as a percentage of maximum allowed rested XP, if configured to one tick per hour 20 hours offline in a stone coffin will provide maximum current rested XP).
 - **Rested XP Max**: `RestedXPMax` (int, default: 5)
   Maximum extra levels worth of rested XP a player can accumulate.
@@ -534,19 +542,19 @@ Jairon O.; Odjit; Jera; Kokuren TCG and Gaming Shop; Rexxn; Eduardo G.; DirtyMik
   The maximum level a player can reach.
 - **Starting Level**: `StartingLevel` (int, default: 10)
   Starting level for players if no data is found.
-- **Unit Leveling Multiplier**: `UnitLevelingMultiplier` (float, default: 7.5)
+- **Unit Leveling Multiplier**: `UnitLevelingMultiplier` (float, default: 7,5)
   The multiplier for experience gained from units.
 - **V Blood Leveling Multiplier**: `VBloodLevelingMultiplier` (float, default: 15)
   The multiplier for experience gained from VBloods.
-- **Docile Unit Multiplier**: `DocileUnitMultiplier` (float, default: 0.15)
+- **Docile Unit Multiplier**: `DocileUnitMultiplier` (float, default: 0,15)
   The multiplier for experience gained from docile units.
-- **War Event Multiplier**: `WarEventMultiplier` (float, default: 0.2)
+- **War Event Multiplier**: `WarEventMultiplier` (float, default: 0,2)
   The multiplier for experience gained from war event trash spawns.
 - **Unit Spawner Multiplier**: `UnitSpawnerMultiplier` (float, default: 0)
   The multiplier for experience gained from unit spawners (vermin nests, tombs). Applies to familiar experience as well.
 - **Group Leveling Multiplier**: `GroupLevelingMultiplier` (float, default: 1)
   The multiplier for experience gained from group kills.
-- **Level Scaling Multiplier**: `LevelScalingMultiplier` (float, default: 0.05)
+- **Level Scaling Multiplier**: `LevelScalingMultiplier` (float, default: 0,05)
   Reduces experience gained from kills with a large level gap between player and unit, increase to make harsher decrease or set to 0 to remove.
 - **Exp Share**: `ExpShare` (bool, default: True)
   Enable or disable sharing experience with nearby players (ExpShareDistance) in combat that are within level range (ExpShareLevelRange, this does not apply to players that have prestiged at least once on PvE servers or clan members of the player that does the final blow) along with familiar unlock sharing if enabled (on PvP servers will only apply to clan members).
@@ -564,13 +572,13 @@ Jairon O.; Odjit; Jera; Kokuren TCG and Gaming Shop; Rexxn; Eduardo G.; DirtyMik
   The prestige levels at which class spells are unlocked. This should match the number of spells per class +1 to account for the default class spell. Can leave at 0 each if you want them unlocked from the start.
 - **Max Leveling Prestiges**: `MaxLevelingPrestiges` (int, default: 10)
   The maximum number of prestiges a player can reach in leveling.
-- **Leveling Prestige Reducer**: `LevelingPrestigeReducer` (float, default: 0.05)
+- **Leveling Prestige Reducer**: `LevelingPrestigeReducer` (float, default: 0,05)
   Flat factor by which experience is reduced per increment of prestige in leveling.
-- **Prestige Rates Reducer**: `PrestigeRatesReducer` (float, default: 0.1)
+- **Prestige Rates Reducer**: `PrestigeRatesReducer` (float, default: 0,1)
   Flat factor by which rates are reduced in expertise/legacy per increment of prestige in expertise/legacy.
-- **Prestige Stat Multiplier**: `PrestigeStatMultiplier` (float, default: 0.1)
+- **Prestige Stat Multiplier**: `PrestigeStatMultiplier` (float, default: 0,1)
   Flat factor by which stats are increased in expertise/legacy bonuses per increment of prestige in expertise/legacy.
-- **Prestige Rate Multiplier**: `PrestigeRateMultiplier` (float, default: 0.1)
+- **Prestige Rate Multiplier**: `PrestigeRateMultiplier` (float, default: 0,1)
   Flat factor by which rates are increased in expertise/legacy per increment of prestige in leveling.
 - **Exo Prestiging**: `ExoPrestiging` (bool, default: False)
   Enable or disable exo prestiges (need to max normal prestiges first, 100 exo prestiges currently available).
@@ -610,27 +618,27 @@ Jairon O.; Odjit; Jera; Kokuren TCG and Gaming Shop; Rexxn; Eduardo G.; DirtyMik
   Quantity of item required for resetting stats.
 - **Max Health**: `MaxHealth` (float, default: 250)
   The base cap for maximum health.
-- **Movement Speed**: `MovementSpeed` (float, default: 0.25)
+- **Movement Speed**: `MovementSpeed` (float, default: 0,25)
   The base cap for movement speed.
-- **Primary Attack Speed**: `PrimaryAttackSpeed` (float, default: 0.1)
+- **Primary Attack Speed**: `PrimaryAttackSpeed` (float, default: 0,1)
   The base cap for primary attack speed.
-- **Physical Life Leech**: `PhysicalLifeLeech` (float, default: 0.1)
+- **Physical Life Leech**: `PhysicalLifeLeech` (float, default: 0,1)
   The base cap for physical life leech.
-- **Spell Life Leech**: `SpellLifeLeech` (float, default: 0.1)
+- **Spell Life Leech**: `SpellLifeLeech` (float, default: 0,1)
   The base cap for spell life leech.
-- **Primary Life Leech**: `PrimaryLifeLeech` (float, default: 0.15)
+- **Primary Life Leech**: `PrimaryLifeLeech` (float, default: 0,15)
   The base cap for primary life leech.
 - **Physical Power**: `PhysicalPower` (float, default: 20)
   The base cap for physical power.
 - **Spell Power**: `SpellPower` (float, default: 10)
   The base cap for spell power.
-- **Physical Crit Chance**: `PhysicalCritChance` (float, default: 0.1)
+- **Physical Crit Chance**: `PhysicalCritChance` (float, default: 0,1)
   The base cap for physical critical strike chance.
-- **Physical Crit Damage**: `PhysicalCritDamage` (float, default: 0.5)
+- **Physical Crit Damage**: `PhysicalCritDamage` (float, default: 0,5)
   The base cap for physical critical strike damage.
-- **Spell Crit Chance**: `SpellCritChance` (float, default: 0.1)
+- **Spell Crit Chance**: `SpellCritChance` (float, default: 0,1)
   The base cap for spell critical strike chance.
-- **Spell Crit Damage**: `SpellCritDamage` (float, default: 0.5)
+- **Spell Crit Damage**: `SpellCritDamage` (float, default: 0,5)
   The base cap for spell critical strike damage.
 
 ### Legacies
@@ -650,29 +658,29 @@ Jairon O.; Odjit; Jera; Kokuren TCG and Gaming Shop; Rexxn; Eduardo G.; DirtyMik
   Item PrefabGUID cost for resetting blood stats.
 - **Reset Legacy Item Quantity**: `ResetLegacyItemQuantity` (int, default: 500)
   Quantity of item required for resetting blood stats.
-- **Healing Received**: `HealingReceived` (float, default: 0.15)
+- **Healing Received**: `HealingReceived` (float, default: 0,15)
   The base cap for healing received.
-- **Damage Reduction**: `DamageReduction` (float, default: 0.05)
+- **Damage Reduction**: `DamageReduction` (float, default: 0,05)
   The base cap for damage reduction.
-- **Physical Resistance**: `PhysicalResistance` (float, default: 0.1)
+- **Physical Resistance**: `PhysicalResistance` (float, default: 0,1)
   The base cap for physical resistance.
-- **Spell Resistance**: `SpellResistance` (float, default: 0.1)
+- **Spell Resistance**: `SpellResistance` (float, default: 0,1)
   The base cap for spell resistance.
-- **Resource Yield**: `ResourceYield` (float, default: 0.25)
+- **Resource Yield**: `ResourceYield` (float, default: 0,25)
   The base cap for resource yield.
-- **Reduced Blood Drain**: `ReducedBloodDrain` (float, default: 0.5)
+- **Reduced Blood Drain**: `ReducedBloodDrain` (float, default: 0,5)
   The base cap for reduced blood drain.
-- **Spell Cooldown Recovery Rate**: `SpellCooldownRecoveryRate` (float, default: 0.1)
+- **Spell Cooldown Recovery Rate**: `SpellCooldownRecoveryRate` (float, default: 0,1)
   The base cap for spell cooldown recovery rate.
-- **Weapon Cooldown Recovery Rate**: `WeaponCooldownRecoveryRate` (float, default: 0.1)
+- **Weapon Cooldown Recovery Rate**: `WeaponCooldownRecoveryRate` (float, default: 0,1)
   The base cap for weapon cooldown recovery rate.
-- **Ultimate Cooldown Recovery Rate**: `UltimateCooldownRecoveryRate` (float, default: 0.2)
+- **Ultimate Cooldown Recovery Rate**: `UltimateCooldownRecoveryRate` (float, default: 0,2)
   The base cap for ultimate cooldown recovery rate.
-- **Minion Damage**: `MinionDamage` (float, default: 0.25)
+- **Minion Damage**: `MinionDamage` (float, default: 0,25)
   The base cap for minion damage.
-- **Ability Attack Speed**: `AbilityAttackSpeed` (float, default: 0.1)
+- **Ability Attack Speed**: `AbilityAttackSpeed` (float, default: 0,1)
   The base cap for ability attack speed.
-- **Corruption Damage Reduction**: `CorruptionDamageReduction` (float, default: 0.1)
+- **Corruption Damage Reduction**: `CorruptionDamageReduction` (float, default: 0,1)
   The base cap for corruption damage reduction.
 
 ### Professions
@@ -700,10 +708,18 @@ Jairon O.; Odjit; Jera; Kokuren TCG and Gaming Shop; Rexxn; Eduardo G.; DirtyMik
   Enable or disable the prestige system for familiars.
 - **Max Familiar Prestiges**: `MaxFamiliarPrestiges` (int, default: 10)
   The maximum number of prestiges a familiar can reach.
-- **Familiar Prestige Stat Multiplier**: `FamiliarPrestigeStatMultiplier` (float, default: 0.1)
+- **Familiar Prestige Stat Multiplier**: `FamiliarPrestigeStatMultiplier` (float, default: 0,1)
   The multiplier for applicable stats gained per familiar prestige.
 - **Max Familiar Level**: `MaxFamiliarLevel` (int, default: 90)
   The maximum level a familiar can reach.
+- **Familiar Souls**: `FamiliarSouls` (bool, default: True)
+  Enable or disable the soul system for familiars. When enabled, killing a unit of the same type as your active familiar has a chance to drop a soul, which can be used to upgrade the familiar's tier.
+- **Soul Drop Chance**: `SoulDropChance` (float, default: 0,05)
+  The chance for a soul to drop when killing a unit of the same type as your active familiar.
+- **Max Familiar Tier**: `MaxFamiliarTier` (int, default: 5)
+  The maximum tier a familiar can reach (t0 to tN).
+- **Familiar Tier Stat Multiplier**: `FamiliarTierStatMultiplier` (float, default: 0,2)
+  The multiplier for all stats gained per familiar tier (0.20 = 20% per tier).
 - **Allow V Bloods**: `AllowVBloods` (bool, default: False)
   Allow VBloods to be unlocked as familiars (this includes shardbearers, if you want those excluded use the bannedUnits list).
 - **Allow Minions**: `AllowMinions` (bool, default: False)
@@ -714,19 +730,19 @@ Jairon O.; Odjit; Jera; Kokuren TCG and Gaming Shop; Rexxn; Eduardo G.; DirtyMik
   The types of units that cannot be used as familiars go here (Human, Undead, Demon, Mechanical, Beast).
 - **Equipment Only**: `EquipmentOnly` (bool, default: False)
   True for only equipment with no working inventory slots, false for both.
-- **Unit Familiar Multiplier**: `UnitFamiliarMultiplier` (float, default: 7.5)
+- **Unit Familiar Multiplier**: `UnitFamiliarMultiplier` (float, default: 7,5)
   The multiplier for experience gained from units.
 - **V Blood Familiar Multiplier**: `VBloodFamiliarMultiplier` (float, default: 15)
   The multiplier for experience gained from VBloods.
-- **Unit Unlock Chance**: `UnitUnlockChance` (float, default: 0.05)
+- **Unit Unlock Chance**: `UnitUnlockChance` (float, default: 0,05)
   The chance for a unit unlock as a familiar.
-- **V Blood Unlock Chance**: `VBloodUnlockChance` (float, default: 0.01)
+- **V Blood Unlock Chance**: `VBloodUnlockChance` (float, default: 0,01)
   The chance for a VBlood unlock as a familiar.
 - **Primal Echoes**: `PrimalEchoes` (bool, default: False)
   Enable or disable acquiring vBloods with configured item reward from exo prestiging (default primal shards) at cost scaling to unit tier using exo reward quantity as the base (highest tier are shard bearers which cost exo reward quantity times 25, or in other words after 25 exo prestiges a player would be able to purchase a shard bearer). Must enable exo prestiging (and therefore normal prestiging), checks for banned vBloods before allowing if applicable.
 - **Echoes Factor**: `EchoesFactor` (int, default: 1)
   Increase to multiply costs for vBlood purchases. Valid integers are between 1-4, if values are outside that range they will be clamped.
-- **Shiny Chance**: `ShinyChance` (float, default: 0.2)
+- **Shiny Chance**: `ShinyChance` (float, default: 0,2)
   The chance for a shiny when unlocking familiars (6 total buffs, 1 buff per familiar). Guaranteed on second unlock of same unit, chance on damage dealt (same as configured onHitEffect chance) to apply spell school debuff.
 - **Shiny Cost Item Quantity**: `ShinyCostItemQuantity` (int, default: 100)
   Quantity of vampiric dust required to make a familiar shiny. May also be spent to change shiny familiar's shiny buff at 25% cost. Enable ExtraRecipes to allow player refinement of this item from Advanced Grinders. Valid values are between 50-200, if outside that range in either direction it will be clamped.
@@ -742,9 +758,9 @@ Jairon O.; Odjit; Jera; Kokuren TCG and Gaming Shop; Rexxn; Eduardo G.; DirtyMik
   Quantity of item required for changing class.
 - **Class On Hit Effects**: `ClassOnHitEffects` (bool, default: True)
   Enable or disable class spell school on hit effects (chance to proc respective debuff from spell school when dealing damage (leech, chill, condemn etc), second tier effect will proc if first is already present on target.
-- **On Hit Proc Chance**: `OnHitProcChance` (float, default: 0.075)
+- **On Hit Proc Chance**: `OnHitProcChance` (float, default: 0,075)
   The chance for a class effect to proc on hit.
-- **Synergy Multiplier**: `SynergyMultiplier` (float, default: 1.5)
+- **Synergy Multiplier**: `SynergyMultiplier` (float, default: 1,5)
   Multiplier for class stat synergies to base stat cap.
 - **Blood Knight Weapon Synergies**: `BloodKnightWeaponSynergies` (string, default: "MaxHealth,PrimaryAttackSpeed,PrimaryLifeLeech,PhysicalPower")
   Blood Knight weapon synergies.
@@ -784,8 +800,6 @@ Jairon O.; Odjit; Jera; Kokuren TCG and Gaming Shop; Rexxn; Eduardo G.; DirtyMik
   Arcane Sorcerer shift spells, granted at levels of prestige.
 - **Death Mage Spells**: `DeathMageSpells` (string, default: "-1204819086,481411985,1961570821,2138402840,-1781779733")
   Death Mage shift spells, granted at levels of prestige.
-
-</details>
 
 ## Recommended Mods
 

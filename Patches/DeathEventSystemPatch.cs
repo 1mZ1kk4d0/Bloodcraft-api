@@ -19,6 +19,7 @@ internal static class DeathEventListenerSystemPatch
     static readonly bool _leveling = ConfigService.LevelingSystem;
     static readonly bool _expertise = ConfigService.ExpertiseSystem;
     static readonly bool _familiars = ConfigService.FamiliarSystem;
+    static readonly bool _familiarSouls = ConfigService.FamiliarSystem && ConfigService.FamiliarSouls;
     static readonly bool _legacies = ConfigService.LegacySystem;
     static readonly bool _professions = ConfigService.ProfessionSystem;
     static readonly bool _allowMinions = ConfigService.FamiliarSystem && ConfigService.AllowMinions;
@@ -85,6 +86,8 @@ internal static class DeathEventListenerSystemPatch
                         }
 
                         RaiseDeathEvent(deathArgs);
+
+                        if (_familiarSouls) FamiliarSoulSystem.OnUpdate(null, deathArgs);
 
                         if (_legacies && isFeedKill)
                         {
